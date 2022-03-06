@@ -5,8 +5,14 @@ const jsonAPI = new FetchWrapper("https://jsonplaceholder.typicode.com"); // ins
 const storage = new StorageWrapper("local"); // localStorage
 // const storage = new StorageWrapper("session"); // sesssionStorage
 
+if (storage.isSupported) {
+  getPosts();
+} else {
+  alert("Storage is not supported");
+}
+
 function getPosts() {
-  if (storage.isSupported && !storage.get("posts")) {
+  if (!storage.get("posts")) {
     jsonAPI.get("/posts?&_limit=6").then((posts) => {
       storage.set("posts", posts);
       displayPosts(storage.get("posts"));
@@ -22,5 +28,3 @@ function displayPosts(data) {
   const posts = document.getElementById("posts");
   posts.innerHTML = JSON.stringify(data, null, 3);
 }
-
-getPosts();
