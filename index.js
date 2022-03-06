@@ -11,17 +11,16 @@ if (storage.isSupported) {
   alert("Storage is not supported");
 }
 
-function getPosts() {
+async function getPosts() {
   const posts = storage.get("posts");
   if (posts) {
     displayPosts(posts);
     console.log("Got posts from storage");
   } else {
-    jsonAPI.get("/posts?&_limit=6").then((data) => {
-      storage.set("posts", data);
-      displayPosts(data);
-      console.log("Got posts from network");
-    });
+    const data = await jsonAPI.get("/posts?&_limit=6");
+    storage.set("posts", data);
+    displayPosts(data);
+    console.log("Got posts from network");
   }
 }
 
