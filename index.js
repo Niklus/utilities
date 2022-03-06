@@ -12,15 +12,16 @@ if (storage.isSupported) {
 }
 
 function getPosts() {
-  if (!storage.get("posts")) {
-    jsonAPI.get("/posts?&_limit=6").then((posts) => {
-      storage.set("posts", posts);
-      displayPosts(storage.get("posts"));
+  const posts = storage.get("posts");
+  if (posts) {
+    displayPosts(posts);
+    console.log("Got posts from storage");
+  } else {
+    jsonAPI.get("/posts?&_limit=6").then((data) => {
+      storage.set("posts", data);
+      displayPosts(data);
       console.log("Got posts from network");
     });
-  } else {
-    displayPosts(storage.get("posts"));
-    console.log("Got posts from storage");
   }
 }
 
